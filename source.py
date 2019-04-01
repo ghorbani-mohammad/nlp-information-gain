@@ -1,6 +1,21 @@
 from __future__ import unicode_literals
 from hazm import *
-import io, sys, nltk, math
+import io, sys, nltk, math, operator, collections
+from collections import OrderedDict
+import numpy as np
+
+
+def save_dict_to_file(dic):
+    f = open('information_gain_calculated.txt', 'w', encoding="utf8")
+    f.write(str(dic))
+    f.close()
+
+
+def load_dict_from_file():
+    f = open('dict.txt', 'r', encoding="utf8")
+    data=f.read()
+    f.close()
+    return eval(data)
 
 
 lines = [line.rstrip('\n') for line in open('puredInput.txt', encoding="utf8")]
@@ -17,16 +32,17 @@ for line in lines[:]:
     docs[doc_type] = docs.get(doc_type, 0) + 1
 
 
-print(docs.keys())
-print(docs.values())
+# print(docs.keys())
+# print(docs.values())
 
 term1 = 0
 current_sum = 0
 for key, value in docs.items():
     x = value/count_of_document
-    term1 += x*(math.log10(x))
+    term1 += x*(math.log2(x))
     current_sum += value
-print("term1_value: " + str(term1))
+term1 = - term1
+# print("term1_value: " + str(term1))
 
 
 def calculation(word):
@@ -43,32 +59,19 @@ def calculation(word):
         else:
             word_docs_has_not_found[doc_type2] = word_docs_has_not_found.get(doc_type2, 0) + 1
 
-    # print(word)
-    # print(number_of_doc_that_has_word)
-    # print("Document That has:")
-    # print(word_docs_found)
-
     term2_value = 0
     sum_of_docs_that_has__word = sum(word_docs_found.values())
-    # print(sum_of_docs_that_has__word)
 
     for key2, value2 in word_docs_found.items():
         x1 = value2 / sum_of_docs_that_has__word
-        term2_value += x1 * (math.log10(x1))
+        term2_value += x1 * (math.log2(x1))
     term2_value = (sum_of_docs_that_has__word / count_of_document) * term2_value
-
-    # print("term2_value")
-    # print(term2_value)
-
-    # print("Document That has not: ")
-    # print(word_docs_has_not_found)
 
     term3_value = 0
     sum_of_docs_that_has_not_word = sum(word_docs_has_not_found.values())
-    # print(sum_of_docs_that_has_not_word)
     for key3, value3 in word_docs_has_not_found.items():
         x2 = value3 / sum_of_docs_that_has_not_word
-        term3_value += x2 * (math.log10(x2))
+        term3_value += x2 * (math.log2(x2))
     term3_value = (sum_of_docs_that_has_not_word / count_of_document) * term3_value
 
     # print("term3_value")
@@ -77,7 +80,7 @@ def calculation(word):
 
 
 processed_words = {}
-for line in lines[:1]:
+for line in lines[:]:
     delimiter = line.find('@@@@@@@@@@') + 10
     line = line[delimiter:]
     tokens = nltk.word_tokenize(line)
@@ -89,4 +92,9 @@ for line in lines[:1]:
             # calculating score for each word
             processed_words[word] = term1 + calculation(word)
 
-print(processed_words)
+
+#sorting dict based on value
+sorted_procceed_words = sorted(processed_words.items(), key=lambda kv: kv[1])
+print(sorted_procceed_words)
+
+save_dict_to_file(sorted_procceed_words)
