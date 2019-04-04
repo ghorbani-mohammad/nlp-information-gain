@@ -48,6 +48,8 @@ for line in lines[:]:
         prev = word
 
 print("Finished build matrixes")
+
+# exit()
 # save_dict_to_file(matrix, 'word_each_doctype_matrix.txt')
 # save_dict_to_file(word_matrix, 'currentWord_prevWord_matrix.txt')
 # save_dict_to_file(doc_type_matrix, 'doc_type_counter_of_train_file_matrix.txt')
@@ -69,6 +71,7 @@ all_test_documents = len(lines)
 
 confusion_matrix = collections.defaultdict(lambda: 0)
 fp_matrix = collections.defaultdict(lambda: 0)
+fp_matrix2 = collections.defaultdict(lambda: 0)
 
 deltas = [0.1, 0.3, 0.5]
 
@@ -127,9 +130,18 @@ for step in deltas:
         else:
             confusion_matrix[step, real, "fn"] += 1
             fp_matrix[step, label] += 1
+            fp_matrix2[step, real, label] += 1
         # print(line[:delimiter])
 
 # exit()
+
+print("Confusion Matrix:")
+print(confusion_matrix)
+print()
+print(fp_matrix2)
+print()
+
+
 precision = {}
 recall = {}
 # print(confusion_matrix)

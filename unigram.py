@@ -53,6 +53,7 @@ all_test_documents = len(lines_test)
 deltas = [0.1, 0.3, 0.5]
 
 confusion_matrix = collections.defaultdict(lambda: 0)
+fp_matrix2 = collections.defaultdict(lambda: 0)
 fp_matrix = collections.defaultdict(lambda: 0)
 
 for line in lines_test[:]:
@@ -92,8 +93,13 @@ for line in lines_test[:]:
         else:
             confusion_matrix[step, real, "fn"] += 1
             fp_matrix[step, label] += 1
+            fp_matrix2[step, real, label] += 1
 
-# print(confusion_matrix)
+print("Confusion Matrix:")
+print(confusion_matrix)
+print()
+print(fp_matrix2)
+print()
 # save_dict_to_file(confusion_matrix, "confusion_matrix_unigram_without_feature_selection.txt")
 
 precision = {}

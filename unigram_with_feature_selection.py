@@ -65,6 +65,7 @@ deltas = [0.1, 0.3, 0.5]
 
 confusion_matrix = collections.defaultdict(lambda: 0)
 fp_matrix = collections.defaultdict(lambda: 0)
+fp_matrix2 = collections.defaultdict(lambda: 0)
 
 for line in lines_test[:]:
     # print(line)
@@ -104,10 +105,17 @@ for line in lines_test[:]:
             confusion_matrix[step, real, "tp"] += 1
         else:
             confusion_matrix[step, real, "fn"] += 1
-            fp_matrix[step, label] +=1
+            fp_matrix[step, label] += 1
+            fp_matrix2[step, real, label] += 1
 
 # print(confusion_matrix)
 # save_dict_to_file(confusion_matrix, "confusion_matrix_unigram_without_feature_selection.txt")
+
+print("Confusion Matrix:")
+print(confusion_matrix)
+print()
+print(fp_matrix2)
+print()
 
 precision = {}
 recall = {}

@@ -11,13 +11,6 @@ def save_dict_to_file(dic):
     f.close()
 
 
-def load_dict_from_file():
-    f = open('dict.txt', 'r', encoding="utf8")
-    data=f.read()
-    f.close()
-    return eval(data)
-
-
 lines = [line.rstrip('\n') for line in open('puredInput.txt', encoding="utf8")]
 
 # Number of document
@@ -93,7 +86,7 @@ for line in lines[:]:
             processed_words[word] = term1 + calculation(word)
 
 
-#sorting dict based on value
+# sorting dict based on value
 sorted_procceed_words = sorted(processed_words.items(), key=lambda kv: kv[1])
 print(sorted_procceed_words)
 
