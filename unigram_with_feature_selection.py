@@ -1,11 +1,22 @@
 import collections, nltk, math
 
-
-def save_dict_to_file(dic, file):
-    f = open(file, 'w', encoding="utf8")
-    f.write(str(dic))
+# Fetching impactful words
+def load_dict_from_file():
+    f = open('information_gain_calculated.txt', 'r', encoding="utf8")
+    data = f.read()
     f.close()
+    return eval(data)
 
+
+dic = load_dict_from_file()
+best_words = []
+counter = 1
+while counter <= 200:
+    # print(str(counter) + " " + str(dic[-counter]))
+    best_words.append(dic[-counter][0])
+    counter += 1
+
+# print(best_words)
 
 lines = [line.rstrip('\n') for line in open('HAM-Train.txt', encoding="utf8")]
 
@@ -67,6 +78,8 @@ for line in lines_test[:]:
             not_zero_counter = 0
             term1 = []
             for token in tokens:
+                if token not in best_words:
+                    continue
                 x = matrix[doc_type, token] - step
                 if x < 0:
                     x = 0
@@ -91,7 +104,7 @@ for line in lines_test[:]:
             confusion_matrix[step, real, "tp"] += 1
         else:
             confusion_matrix[step, real, "fn"] += 1
-            fp_matrix[step, label] += 1
+            fp_matrix[step, label] +=1
 
 # print(confusion_matrix)
 # save_dict_to_file(confusion_matrix, "confusion_matrix_unigram_without_feature_selection.txt")
